@@ -1,4 +1,5 @@
 import time
+import numpy as np
 import cupy as cp
 
 # from test import simple_graphs
@@ -7,7 +8,6 @@ from test import stats
 from src import dinics
 from src import pushrelabel
 
-WARMUP = 3
 REPREAT = 100
 TESTS = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 

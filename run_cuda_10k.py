@@ -1,4 +1,5 @@
 import time
+import numpy as np
 import cupy as cp
 
 # from test import simple_graphs
