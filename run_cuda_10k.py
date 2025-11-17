@@ -9,10 +9,9 @@ from src import pushrelabel
 
 WARMUP = 3
 REPREAT = 100
-TESTS = [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]
+TESTS = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 
 gpu_stats = []
-cpu_stats = []
 
 for T in TESTS:
     g = generate_graphs.generate_random_graph(T, seed=69420)
@@ -25,7 +24,7 @@ for T in TESTS:
     cp.cuda.Device().synchronize
 
     gpu_times = []
-    cpu_times = []
+    results = []
 
     for _ in range(REPREAT):
         gpu_start = time.perf_counter()
@@ -33,27 +32,18 @@ for T in TESTS:
         gpu_end = time.perf_counter()
         cp.cuda.Device().synchronize
 
-        cpu_start = time.perf_counter()
-        cpu_out = g.maxflow(0, g.vcount() - 1, capacity=g.es["capacity"]).value
-        cpu_end = time.perf_counter()
-
         gpu_times.append(gpu_end - gpu_start)
-        cpu_times.append(cpu_end - cpu_start)
+        results.append(gpu_out)
 
     gpu_stats.append((g.vcount(), stats.runtime_stats(gpu_times)))
-    cpu_stats.append((g.vcount(), stats.runtime_stats(cpu_times)))
 
-    print(f"CuPy Output: {gpu_out}")
-    print(f"iGraph Output: {cpu_out}")
-    print()
+    print(f"CuPy Output for {g.vcount()} nodes: {np.median(np.array(results))}")
 
 print()
-print("Num Nodes: med(ms), low(ms), high(ms), std_dev(ms)")
+print("CuPy Results:")
+print()
+print("Num Nodes, med(ms), low(ms), high(ms), std_dev(ms)")
 print("--------------------------------------------------")
-print("CuPy Output:")
 for graph_size, entry in gpu_stats:
-    print(f"{graph_size} Nodes:", entry)
+    print(f"{graph_size},", entry)
 print()
-print("iGraph Output:")
-for graph_size, entry in cpu_stats:
-    print(f"{graph_size} Nodes:", entry)
