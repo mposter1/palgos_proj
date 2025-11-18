@@ -4,12 +4,11 @@ import cupy as cp
 # from test import simple_graphs
 from test import generate_graphs
 from test import stats
-from src import dinics
 from src import pushrelabel
 
 WARMUP = 3
-REPREAT = 100
-TESTS = [5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000]
+REPREAT = 1
+TESTS = [10, 20, 30, 40, 50]
 
 gpu_stats = []
 cpu_stats = []

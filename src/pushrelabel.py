@@ -45,6 +45,10 @@ push_kernel = push_mod.get_function("push_atomic")
 
 
 class PushRelabelGPU:
+    """
+    Sinlge GPU implementation of the push-relabel algorithm for max flow
+    """
+
     def __init__(self, ig):
         """
         ig: igraph Graph object with capacities stored in es["capacity"]
@@ -69,32 +73,6 @@ class PushRelabelGPU:
                 self.rmat[s][i] = self.adj[s][i] + self.adj[i][s]
                 self.excess[i] = self.adj[s][i]
                 self.excess_total += self.excess[i]
-
-        # Push full capacity to neighbors of source
-        # push = self.residual[s, :]
-        # self.flow[s, :] = push
-        # self.residual[s, :] -= push
-        # self.residual[:, s] += push  # reverse edges
-        # self.excess[:] = 0.0
-        # self.excess[s] = -cp.sum(push)
-        # self.excess += push  # excess for neighbors
-
-    # def push_relabel(self, s, t):
-    #     while self.cpu_excess[s] + self.cpu_excess[t] < self.excess_total:
-    #         gpu_h = cp.array(self.cpu_h)
-    #     amount = min(self.excess[u], self.residual[u, v])
-    #     self.flow[u, v] += amount
-    #     self.residual[u, v] -= amount
-    #     self.residual[v, u] += amount
-    #     self.excess[u] -= amount
-    #     self.excess[v] += amount
-
-    # def relabel(self, u):
-    #     # Increase height to 1 + min height of neighbors with residual > 0
-    #     neighbors = cp.where(self.residual[u, :] > 0)[0]
-    #     if len(neighbors) == 0:
-    #         return  # cannot relabel if no neighbors
-    #     self.h[u] = 1 + int(cp.min(self.h[neighbors]))
 
     def step(self, s, t):
         V = self.V
@@ -183,38 +161,3 @@ class PushRelabelGPU:
 
         # Max flow = sum of excess pushed into sink
         return float(self.excess[t].get())
-
-    # def run(self, s, t):
-        # mark = np.zeros(self.V, dtype=np.bool)
-        # scanned = np.zeros(self.V, dtype=np.bool)
-
-        # gpu_adj = cp.array(self.cpu_adj)
-        # gpu_residual = cp.array(self.cpu_residual)
-        # gpu_h = cp.array(self.cpu_h)
-        # gpu_excess = cp.array(self.cpu_excess)
-
-    #     self.initialize_preflow(s)
-
-    #     # Active vertices = all except source and sink
-    #     active = cp.where((self.excess > 0) & (cp.arange(self.V) != s) & (cp.arange(self.V) != t))[0]
-
-    #     while len(active) > 0:
-    #         u = int(active[0])
-    #         pushed = False
-    #         # Try to push to neighbors
-    #         neighbors = cp.where(self.residual[u, :] > 0)[0]
-    #         for v in neighbors:
-    #             if self.h[u] == self.h[v] + 1:
-    #                 self.push(u, v)
-    #                 pushed = True
-    #                 if self.excess[u] <= 0:
-    #                     break
-    #         if not pushed:
-    #             self.relabel(u)
-    #         # Update active vertices
-    #         active = cp.where((self.excess > 0) & (cp.arange(self.V) != s) & (cp.arange(self.V) != t))[0]
-
-    #     # Max flow = sum of flows leaving source
-    #     max_flow = cp.sum(self.flow[s, :])
-    #     return self.flow, float(max_flow)
-
