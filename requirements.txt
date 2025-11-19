@@ -1,4 +1,8 @@
 igraph
+jupyter
 matplotlib
 numpy
+pandas
+scipy
+seaborn
 cupy-cuda12x
