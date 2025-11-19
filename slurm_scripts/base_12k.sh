@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -J base-maxflow-10k			# Job name
+#SBATCH -J base-maxflow-12k			# Job name
 #SBATCH -o slurm-out/base-12k.o%j	# Name of stdout output file
 #SBATCH -e slurm-out/base-12k.e%j	# Name of stderr error file
 #SBATCH -p gpu-a100				# Queue (partition) name

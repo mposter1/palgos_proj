@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH -J csr-maxflow-12k			# Job name
-#SBATCH -o slurm-out/csr-12k.o%j	# Name of stdout output file
-#SBATCH -e slurm-out/csr-12k.e%j	# Name of stderr error file
+#SBATCH -J coo-maxflow-10k			# Job name
+#SBATCH -o slurm-out/coo-10k.o%j	# Name of stdout output file
+#SBATCH -e slurm-out/coo-10k.e%j	# Name of stderr error file
 #SBATCH -p gpu-a100				# Queue (partition) name
 #SBATCH -N 1               			# Total # of nodes 
 #SBATCH -t 06:00:00        			# Run time (hh:mm:ss)
@@ -17,4 +17,5 @@ source venv/bin/activate
 date
 echo "------"
 
-python3 run_csr_12k.py
+python3 run_coo_10k.py
+
