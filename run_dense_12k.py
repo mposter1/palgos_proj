@@ -7,7 +7,7 @@ from test import stats
 from src import pushrelabel
 
 REPREAT = 100
-TESTS = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+TESTS = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000]
 
 gpu_stats = []
 
@@ -31,7 +31,7 @@ for T in TESTS:
 
     gpu_stats.append((g.vcount(), stats.runtime_stats(gpu_times)))
 
-    print(f"CuPy Output for {g.vcount()} nodes: {results / REPREAT}")
+    print(f"Dense Output for {g.vcount()} nodes: {results / REPREAT}")
 
 print()
 print("Dense CuPy Results:")
@@ -41,3 +41,4 @@ print("--------------------------------------------------")
 for graph_size, entry in gpu_stats:
     print(f"{graph_size},", entry)
 print()
+

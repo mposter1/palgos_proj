@@ -4,10 +4,10 @@ import cupy as cp
 
 from test import generate_graphs
 from test import stats
-from src import pushrelabel
+from src.pushrelabelCOO import PushRelabelCOO
 
 REPREAT = 100
-TESTS = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+TESTS = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000]
 
 gpu_stats = []
 
@@ -18,7 +18,7 @@ for T in TESTS:
     results = 0
 
     for _ in range(REPREAT):
-        PR = pushrelabel.PushRelabelGPU(g)
+        PR = PushRelabelCOO(g)
 
         cp.cuda.Device().synchronize
         gpu_start = time.perf_counter()
@@ -31,13 +31,14 @@ for T in TESTS:
 
     gpu_stats.append((g.vcount(), stats.runtime_stats(gpu_times)))
 
-    print(f"CuPy Output for {g.vcount()} nodes: {results / REPREAT}")
+    print(f"COO Output for {g.vcount()} nodes: {results / REPREAT}")
 
 print()
-print("Dense CuPy Results:")
+print("Sparse COO Results:")
 print()
 print("Num Nodes, med(ms), low(ms), high(ms), std_dev(ms)")
 print("--------------------------------------------------")
 for graph_size, entry in gpu_stats:
     print(f"{graph_size},", entry)
 print()
+

@@ -8,10 +8,9 @@ from src.pushrelabel import PushRelabelGPU
 from src.pushrelableCSR import PushRelabelCSR
 from src.pushrelabelCOO import PushRelabelCOO
 
-WARMUP = 3
 REPREAT = 10
 # TESTS = [10
-TESTS = [1000, 2000, 3000, 4000, 5000]
+TESTS = [2000, 4000, 6000] 
 
 cpu_stats = []
 dense_stats = []
@@ -32,6 +31,9 @@ for T in TESTS:
     for _ in range(REPREAT):
         g = generate_graphs.generate_random_graph(T, seed=69420)
 
+        print(f"{T} nodes, iteration {_}")
+        print()
+
         dense = PushRelabelGPU(g)
         sparse_csr = PushRelabelCSR(g)
         sparse_coo = PushRelabelCOO(g)
@@ -45,7 +47,7 @@ for T in TESTS:
         cp.cuda.Device().synchronize
 
         dense_start = time.perf_counter()
-        dense_out += dense.compute_max_flow(0, g.vcount() - 1, 100)
+        dense_out += dense.compute_max_flow(0, g.vcount() - 1, 1000)
         dense_end = time.perf_counter()
 
         cp.cuda.Device().synchronize
@@ -54,7 +56,7 @@ for T in TESTS:
         cp.cuda.Device().synchronize
 
         csr_start = time.perf_counter()
-        csr_out += sparse_csr.compute_max_flow(0, g.vcount() - 1, 100)
+        csr_out += sparse_csr.compute_max_flow(0, g.vcount() - 1, 1000)
         csr_end = time.perf_counter()
 
         cp.cuda.Device().synchronize
@@ -69,11 +71,10 @@ for T in TESTS:
         cp.cuda.Device().synchronize
         coo_times.append(coo_end - coo_start)
 
-    print(f"{T} nodes, {REPREAT} iterations")
     print(f"iGraph Output: {cpu_out / REPREAT}")
     print(f"Dense Output: {dense_out / REPREAT}")
     print(f"CSR Output: {csr_out / REPREAT}")
-    print(f"CSR Output: {coo_out / REPREAT}")
+    print(f"COO Output: {coo_out / REPREAT}")
     print("---")
 
     cpu_stats.append((g.vcount(), stats.runtime_stats(cpu_times)))
