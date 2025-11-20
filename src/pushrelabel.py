@@ -62,7 +62,7 @@ class PushRelabelGPU:
         self.flow = cp.zeros_like(self.rmat)         # not used in push–relabel core
         self.h = cp.zeros(self.V, dtype=cp.int32)
         self.excess = cp.zeros(self.V, dtype=cp.float32)
-        self.excess_total = 0
+        # self.excess_total = 0
 
     def initialize_preflow(self, s):
         self.h[s] = self.V  # source height = V
@@ -71,7 +71,7 @@ class PushRelabelGPU:
             if self.adj[s][i] > 0:
                 self.rmat[s][i] = self.adj[s][i] + self.adj[i][s]
                 self.excess[i] = self.adj[s][i]
-                self.excess_total += self.excess[i]
+                # self.excess_total += self.excess[i]
 
     def step(self, s, t):
         V = self.V
