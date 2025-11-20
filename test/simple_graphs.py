@@ -4,7 +4,7 @@ def graph_0():
     # Construct a graph with 5 vertices
     g = ig.Graph(
         6,
-        [(3, 2), (3, 4), (2, 1), (4, 1), (4, 5), (1, 0), (5, 0)],
+        [(0, 2), (0, 4), (2, 1), (4, 1), (4, 3), (1, 5), (5, 5)],
         directed=True
     )
     g.es["capacity"] = [7, 8, 1, 2, 3, 4, 5]
@@ -89,3 +89,14 @@ def graph_8():
     )
     g.es["capacity"] = [3, 3, 5, 2, 1]
     return g
+
+def simple_graphs():
+    return [graph_0(),
+            graph_1(),
+            graph_2(),
+            graph_3(),
+            graph_4(),
+            graph_5(),
+            graph_6(),
+            graph_7(),
+            graph_8()]
